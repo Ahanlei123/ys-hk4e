@@ -1,0 +1,8 @@
+package constant
+
+const (
+	FETTER_STATE_NONE     = 0
+	FETTER_STATE_NOT_OPEN = 1
+	FETTER_STATE_OPEN     = 1
+	FETTER_STATE_FINISH   = 3
+)

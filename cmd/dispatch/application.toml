@@ -1,0 +1,20 @@
+http_port = 8080
+
+[hk4e]
+dispatch_url = "https://hk4e.flswld.com/query_cur_region" # 二级dispatch地址 将域名改为dispatch的外网地址
+
+[logger]
+level = "DEBUG"
+mode = "CONSOLE"
+track = true
+max_size = 10485760
+
+[database]
+url = "mongodb://mongo:27017"
+
+[redis]
+addr = "redis://redis:6379"
+password = ""
+
+[mq]
+nats_url = "nats://nats:4222"

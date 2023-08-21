@@ -1,0 +1,11 @@
+package constant
+
+const (
+	CLIMATE_TYPE_NONE         = 0
+	CLIMATE_TYPE_SUNNY        = 1
+	CLIMATE_TYPE_CLOUDY       = 2
+	CLIMATE_TYPE_RAIN         = 3
+	CLIMATE_TYPE_THUNDERSTORM = 4
+	CLIMATE_TYPE_SNOW         = 5
+	CLIMATE_TYPE_MIST         = 6
+)

@@ -1,0 +1,11 @@
+package constant
+
+const (
+	EQUIP_TYPE_NONE     = 0
+	EQUIP_TYPE_BRACER   = 1
+	EQUIP_TYPE_NECKLACE = 2
+	EQUIP_TYPE_SHOES    = 3
+	EQUIP_TYPE_RING     = 4
+	EQUIP_TYPE_DRESS    = 5
+	EQUIP_TYPE_WEAPON   = 6
+)

@@ -1,0 +1,11 @@
+package constant
+
+const (
+	SCENE_TYPE_NONE       = 0
+	SCENE_TYPE_WORLD      = 1
+	SCENE_TYPE_DUNGEON    = 2
+	SCENE_TYPE_ROOM       = 3
+	SCENE_TYPE_HOME_WORLD = 4
+	SCENE_TYPE_HOME_ROOM  = 5
+	SCENE_TYPE_ACTIVITY   = 6
+)

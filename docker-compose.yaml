@@ -1,0 +1,200 @@
+version: '3'
+services:
+  node_services:
+    restart: always
+    image: flswld/node:1.0.0
+    container_name: node
+    ports:
+      - "1234:1234/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./node/bin/application.toml:/node/application.toml
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+  dispatch_services:
+    restart: always
+    image: flswld/dispatch:1.0.0
+    container_name: dispatch
+    ports:
+      - "8080:8080/tcp"
+      - "2345:2345/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./dispatch/bin/application.toml:/dispatch/application.toml
+      - ./dispatch/bin/key:/dispatch/key
+      - ./dispatch/bin/static:/dispatch/static
+    depends_on:
+      - node_services
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+  gate_320_services:
+    restart: always
+    image: flswld/gate:1.0.0
+    container_name: gate_320
+    ports:
+      - "22222:22222/udp"
+      - "33333:33333/tcp"
+      - "3456:3456/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./gate/bin/application.toml:/gate/application.toml
+      - ./gate/bin/key:/gate/key
+    depends_on:
+      - dispatch_services
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 8192M
+  anticheat_services:
+    restart: always
+    image: flswld/anticheat:1.0.0
+    container_name: anticheat
+    ports:
+      - "5678:5678/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./anticheat/bin/application.toml:/anticheat/application.toml
+      - ../gdconf/game_data_config:/anticheat/game_data_config
+    depends_on:
+      - gate_320_services
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+  pathfinding_services:
+    restart: always
+    image: flswld/pathfinding:1.0.0
+    container_name: pathfinding
+    ports:
+      - "6789:6789/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./pathfinding/bin/application.toml:/pathfinding/application.toml
+    depends_on:
+      - anticheat_services
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+  gs_1_services:
+    restart: always
+    image: flswld/gs:1.0.0
+    container_name: gs_1
+    ports:
+      - "4567:4567/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./gs/bin/application.toml:/gs/application.toml
+      - ../gdconf/game_data_config:/gs/game_data_config
+    depends_on:
+      - pathfinding_services
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 8192M
+  gs_2_services:
+    restart: always
+    image: flswld/gs:1.0.0
+    container_name: gs_2
+    ports:
+      - "4568:4567/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./gs/bin/application.toml:/gs/application.toml
+      - ../gdconf/game_data_config:/gs/game_data_config
+    depends_on:
+      - gs_1_services
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 8192M
+  gs_3_services:
+    restart: always
+    image: flswld/gs:1.0.0
+    container_name: gs_3
+    ports:
+      - "4569:4567/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./gs/bin/application.toml:/gs/application.toml
+      - ../gdconf/game_data_config:/gs/game_data_config
+    depends_on:
+      - gs_2_services
+    deploy:
+      resources:
+        limits:
+          cpus: '8.00'
+          memory: 8192M
+  gm_services:
+    restart: always
+    image: flswld/gm:1.0.0
+    container_name: gm
+    ports:
+      - "9001:9001/tcp"
+      - "7890:7890/tcp"
+    environment:
+      TZ: Asia/Shanghai
+      GOLANG_PROTOBUF_REGISTRATION_CONFLICT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /usr/share/zoneinfo:/usr/share/zoneinfo
+      - ./gm/bin/application.toml:/gm/application.toml
+    depends_on:
+      - gs_3_services
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
